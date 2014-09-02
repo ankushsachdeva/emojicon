@@ -46,8 +46,6 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
-import github.ankushsachdeva.emojicon.R;
-
 
 /**
  * @author Ankush Sachdeva (sankush@yahoo.co.in).
@@ -98,6 +96,13 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 	
 	public Boolean isKeyBoardOpen(){
 		return isOpened;
+	}
+	
+	@Override
+	public void dismiss() {
+		super.dismiss();
+		EmojiconRecentsManager
+        .getInstance(mContext).saveRecents();
 	}
 	
 	public void setSizeForSoftKeyboard(){

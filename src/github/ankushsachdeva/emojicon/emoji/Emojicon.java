@@ -23,18 +23,9 @@ import java.io.Serializable;
  */
 public class Emojicon implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int icon;
-    private char value;
     private String emoji;
 
     private Emojicon() {
-    }
-
-    public static Emojicon fromResource(int icon, int value) {
-        Emojicon emoji = new Emojicon();
-        emoji.icon = icon;
-        emoji.value = (char) value;
-        return emoji;
     }
 
     public static Emojicon fromCodePoint(int codePoint) {
@@ -57,14 +48,6 @@ public class Emojicon implements Serializable {
 
     public Emojicon(String emoji) {
         this.emoji = emoji;
-    }
-
-    public char getValue() {
-        return value;
-    }
-
-    public int getIcon() {
-        return icon;
     }
 
     public String getEmoji() {

@@ -75,23 +75,20 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
     @Override
     public boolean add(Emojicon object) {
         boolean ret = super.add(object);
-        saveRecents();
         return ret;
     }
 
     @Override
     public void add(int index, Emojicon object) {
         super.add(index, object);
-        saveRecents();
     }
 
     @Override
     public boolean remove(Object object) {
         boolean ret = super.remove(object);
-        saveRecents();
         return ret;
     }
-
+    
     private SharedPreferences getPreferences() {
         return mContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
@@ -102,21 +99,20 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
         StringTokenizer tokenizer = new StringTokenizer(str, "~");
         while (tokenizer.hasMoreTokens()) {
             try {
-                int codepoint = Integer.parseInt(tokenizer.nextToken());
-                add(Emojicon.fromCodePoint(codepoint));
+            	add(new Emojicon(tokenizer.nextToken()));
             }
             catch (NumberFormatException e) {
                 // ignored
             }
         }
     }
-
-    private void saveRecents() {
+    
+    public void saveRecents() {
         StringBuilder str = new StringBuilder();
         int c = size();
         for (int i = 0; i < c; i++) {
             Emojicon e = get(i);
-            str.append(e.getEmoji().codePointAt(0));
+            str.append(e.getEmoji());
             if (i < (c - 1)) {
                 str.append('~');
             }
