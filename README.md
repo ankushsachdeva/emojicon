@@ -87,7 +87,7 @@ Emojicon is using emojis graphics from [emoji-cheat-sheet.com](https://github.co
 ## Contributing
 
 Please fork this repository and contribute back using
-[pull requests](https://github.com/rockerhieu/emojicon/pulls).
+[pull requests](https://github.com/ankushsachdeva/emojicon/pulls).
 
 Any contributions, large or small, major features, bug fixes, additional
 language translations, unit/integration tests are welcomed and appreciated
