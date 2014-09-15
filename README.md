@@ -2,6 +2,8 @@
 
 Whatsapp like implementation for emjoicons which appear as a popup over the  soft keyboard
 
+![Screenshot](/sample.png?raw=true)
+
 ## Example
 
 

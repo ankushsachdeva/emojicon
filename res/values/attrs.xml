@@ -13,25 +13,27 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
+-->
 
 <resources>
+
     <declare-styleable name="Emojicon">
-        <attr name="emojiconSize" format="dimension"/>
-        <attr name="emojiconTextStart" format="integer"/>
-        <attr name="emojiconTextLength" format="integer"/>
+        <attr name="emojiconSize" format="dimension" />
+        <attr name="emojiconTextStart" format="integer" />
+        <attr name="emojiconTextLength" format="integer" />
     </declare-styleable>
+
     <dimen name="keyboard_height">250dp</dimen>
-    <style name="emojiDialog" parent="@android:style/Theme.Dialog" >
-	        <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">fill_parent</item>
 
+    <style name="emojiDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
 
-    <!-- No backgrounds, titles or window float -->
-    <item name="android:windowFrame">@null</item>
-    <item name="android:windowBackground">@drawable/popup_bg</item>
-    <item name="android:windowNoTitle">true</item>
-    <item name="android:windowIsFloating">false</item>
+        <!-- No backgrounds, titles or window float -->
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@drawable/popup_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
 
-</style>
 </resources>
