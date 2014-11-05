@@ -35,7 +35,6 @@ import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,7 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager.LayoutParams;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 
 
@@ -57,111 +55,161 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 	private PagerAdapter mEmojisAdapter;
 	private EmojiconRecentsManager mRecentsManager;
 	private int keyBoardHeight = 0;
+	private Boolean pendingOpen = false;
 	private Boolean isOpened = false;
 	OnEmojiconClickedListener onEmojiconClickedListener;
 	OnEmojiconBackspaceClickedListener onEmojiconBackspaceClickedListener; 
 	OnSoftKeyboardOpenCloseListener onSoftKeyboardOpenCloseListener;
 	View rootView;
 	Context mContext;
-	
-	public ViewPager emojisPager;
-	
+
+	private ViewPager emojisPager;
+	/**
+	 * Constructor
+	 * @param rootView	The top most layout in your view hierarchy. The difference of this view and the screen height will be used to calculate the keyboard height.
+	 * @param mContext The context of current activity.
+	 */
 	public EmojiconsPopup(View rootView, Context mContext){
 		super(mContext);
 		this.mContext = mContext;
 		this.rootView = rootView;
 		View customView = createCustomView();
 		setContentView(customView);
-		
 		setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 		//default size 
 		setSize((int) mContext.getResources().getDimension(R.dimen.keyboard_height), LayoutParams.MATCH_PARENT);
 	}
-	
+	/**
+	 * Set the listener for the event of keyboard opening or closing.
+	 */
 	public void setOnSoftKeyboardOpenCloseListener(OnSoftKeyboardOpenCloseListener listener){
 		this.onSoftKeyboardOpenCloseListener = listener; 
 	}
-	
+
+	/**
+	 * Set the listener for the event when any of the emojicon is clicked
+	 */
 	public void setOnEmojiconClickedListener(OnEmojiconClickedListener listener){
 		this.onEmojiconClickedListener = listener;
 	}
-	
+
+	/**
+	 * Set the listener for the event when backspace on emojicon popup is clicked
+	 */
 	public void setOnEmojiconBackspaceClickedListener(OnEmojiconBackspaceClickedListener listener){
 		this.onEmojiconBackspaceClickedListener = listener;
 	}
-	
+
+	/**
+	 * Use this function to show the emoji popup.
+	 * NOTE: Since, the soft keyboard sizes are variable on different android devices, the 
+	 * library needs you to open the soft keyboard atleast once before calling this function.
+	 * If that is not possible see showAtBottomPending() function.
+	 * 
+	 */
 	public void showAtBottom(){
 		showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
 	}
-	
+	/**
+	 * Use this function when the soft keyboard has not been opened yet. This 
+	 * will show the emoji popup after the keyboard is up next time.
+	 * Generally, you will be calling InputMethodManager.showSoftInput function after 
+	 * calling this function.
+	 */ 
+	public void showAtBottomPending(){
+		if(isKeyBoardOpen())
+			showAtBottom();
+		else
+			pendingOpen = true;
+	}
+
+	/**
+	 * 
+	 * @return Returns true if the soft keyboard is open, false otherwise.
+	 */
 	public Boolean isKeyBoardOpen(){
 		return isOpened;
 	}
-	
+
+	/**
+	 * Dismiss the popup
+	 */
 	@Override
 	public void dismiss() {
 		super.dismiss();
 		EmojiconRecentsManager
-        .getInstance(mContext).saveRecents();
+		.getInstance(mContext).saveRecents();
 	}
-	
+
+	/**
+	 * Call this function to resize the emoji popup according to your soft keyboard size
+	 */
 	public void setSizeForSoftKeyboard(){
 		rootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-	        @Override
-	        public void onGlobalLayout() {
-        	     Rect r = new Rect();
-        	     rootView.getWindowVisibleDisplayFrame(r);
+			@Override
+			public void onGlobalLayout() {
+				Rect r = new Rect();
+				rootView.getWindowVisibleDisplayFrame(r);
 
-                 int screenHeight = rootView.getRootView()
-                         .getHeight();
-                 int heightDifference = screenHeight
-                         - (r.bottom - r.top);
-                 int resourceId = mContext.getResources()
-                         .getIdentifier("status_bar_height",
-                                 "dimen", "android");
-                 if (resourceId > 0) {
-                     heightDifference -= mContext.getResources()
-                             .getDimensionPixelSize(resourceId);
-                 }
-                 if (heightDifference > 100) {
-                	 keyBoardHeight = heightDifference;
-                	 setSize(LayoutParams.MATCH_PARENT, keyBoardHeight);
-                	 if(isOpened == false){
- 	                    if(onSoftKeyboardOpenCloseListener!=null)
- 	                    	onSoftKeyboardOpenCloseListener.onKeyboardOpen(keyBoardHeight);
- 	                }
-                	isOpened = true;
-                 }
-                 else{
-                	 isOpened = false;
-                	 if(onSoftKeyboardOpenCloseListener!=null)
-	                    	onSoftKeyboardOpenCloseListener.onKeyboardClose();
-                 }
-	         }
-	    });
+				int screenHeight = rootView.getRootView()
+						.getHeight();
+				int heightDifference = screenHeight
+						- (r.bottom - r.top);
+				int resourceId = mContext.getResources()
+						.getIdentifier("status_bar_height",
+								"dimen", "android");
+				if (resourceId > 0) {
+					heightDifference -= mContext.getResources()
+							.getDimensionPixelSize(resourceId);
+				}
+				if (heightDifference > 100) {
+					keyBoardHeight = heightDifference;
+					setSize(LayoutParams.MATCH_PARENT, keyBoardHeight);
+					if(isOpened == false){
+						if(onSoftKeyboardOpenCloseListener!=null)
+							onSoftKeyboardOpenCloseListener.onKeyboardOpen(keyBoardHeight);
+					}
+					isOpened = true;
+					if(pendingOpen){
+						showAtBottom();
+						pendingOpen = false;
+					}
+				}
+				else{
+					isOpened = false;
+					if(onSoftKeyboardOpenCloseListener!=null)
+						onSoftKeyboardOpenCloseListener.onKeyboardClose();
+				}
+			}
+		});
 	}
-	
+
+	/**
+	 * Manually set the popup window size
+	 * @param width Width of the popup
+	 * @param height Height of the popup
+	 */
 	public void setSize(int width, int height){
 		setWidth(width);
 		setHeight(height);
 	}
-	
-	public View createCustomView() {
+
+	private View createCustomView() {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.emojicons, null, false);
 		emojisPager = (ViewPager) view.findViewById(R.id.emojis_pager);
 		emojisPager.setOnPageChangeListener(this);
 		EmojiconRecents recents = this;
 		mEmojisAdapter = new EmojisPagerAdapter(
-		Arrays.asList(
-				new EmojiconRecentsGridView(mContext, null, null, this),
-				new EmojiconGridView(mContext, People.DATA, recents, this),
-				new EmojiconGridView(mContext, Nature.DATA, recents, this),
-				new EmojiconGridView(mContext, Objects.DATA, recents, this),
-				new EmojiconGridView(mContext, Places.DATA, recents, this),
-				new EmojiconGridView(mContext, Symbols.DATA, recents, this)
-				)
-			);
+				Arrays.asList(
+						new EmojiconRecentsGridView(mContext, null, null, this),
+						new EmojiconGridView(mContext, People.DATA, recents, this),
+						new EmojiconGridView(mContext, Nature.DATA, recents, this),
+						new EmojiconGridView(mContext, Objects.DATA, recents, this),
+						new EmojiconGridView(mContext, Places.DATA, recents, this),
+						new EmojiconGridView(mContext, Symbols.DATA, recents, this)
+						)
+				);
 		emojisPager.setAdapter(mEmojisAdapter);
 		mEmojiTabs = new View[6];
 		mEmojiTabs[0] = view.findViewById(R.id.emojis_tab_0_recents);
@@ -180,7 +228,7 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 			});
 		}
 		view.findViewById(R.id.emojis_backspace).setOnTouchListener(new RepeatListener(1000, 50, new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if(onEmojiconBackspaceClickedListener != null)
@@ -206,30 +254,12 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 		return view;
 	}
 
-	public static void input(EditText editText, Emojicon emojicon) {
-		if (editText == null || emojicon == null) {
-			return;
-		}
-
-		int start = editText.getSelectionStart();
-		int end = editText.getSelectionEnd();
-		if (start < 0) {
-			editText.append(emojicon.getEmoji());
-		} else {
-			editText.getText().replace(Math.min(start, end), Math.max(start, end), emojicon.getEmoji(), 0, emojicon.getEmoji().length());
-		}
-	}
-
 	@Override
 	public void addRecentEmoji(Context context, Emojicon emojicon) {
 		EmojiconRecentsGridView fragment = ((EmojisPagerAdapter)emojisPager.getAdapter()).getRecentFragment();
 		fragment.addRecentEmoji(context, emojicon);
 	}
 
-	public static void backspace(EditText editText) {
-		KeyEvent event = new KeyEvent(0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
-		editText.dispatchKeyEvent(event);
-	}
 
 	@Override
 	public void onPageScrolled(int i, float v, int i2) {
@@ -279,20 +309,20 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 		public int getCount() {
 			return views.size();
 		}
-		
-		
+
+
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			View v = views.get(position).rootView;
 			((ViewPager)container).addView(v, 0);
 			return v;
 		}
-		
+
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object view) {
 			((ViewPager)container).removeView((View)view);
 		}
-		
+
 		@Override
 		public boolean isViewFromObject(View view, Object key) {
 			return key == view;
@@ -370,7 +400,7 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 	public interface OnEmojiconBackspaceClickedListener {
 		void onEmojiconBackspaceClicked(View v);
 	}
-	
+
 	public interface OnSoftKeyboardOpenCloseListener{
 		void onKeyboardOpen(int keyBoardHeight);
 		void onKeyboardClose();

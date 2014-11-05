@@ -69,6 +69,7 @@ popup.setOnSoftKeyboardOpenCloseListener(new OnSoftKeyboardOpenCloseListener() {
         });
 
 //To show popup manually you can call popup.showAtBottom();
+//To show popup when the soft keyboard is not already visible, use popup.showAtBottomPending()
 ```
 
 Note: You can change the size of emojis in XML layout through attribute `emojiconSize`.

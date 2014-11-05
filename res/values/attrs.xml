@@ -31,7 +31,7 @@
 
         <!-- No backgrounds, titles or window float -->
         <item name="android:windowFrame">@null</item>
-        <item name="android:windowBackground">@drawable/popup_bg</item>
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
     </style>
