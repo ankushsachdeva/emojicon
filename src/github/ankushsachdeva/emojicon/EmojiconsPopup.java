@@ -27,18 +27,24 @@ import github.ankushsachdeva.emojicon.emoji.Symbols;
 import java.util.Arrays;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager.LayoutParams;
@@ -144,6 +150,7 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 	/**
 	 * Call this function to resize the emoji popup according to your soft keyboard size
 	 */
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	public void setSizeForSoftKeyboard(){
 		rootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 			@Override
@@ -155,7 +162,7 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 						.getHeight();
 				int heightDifference = screenHeight
 						- (r.bottom - r.top);
-                }
+                
 				Resources resources = mContext.getResources();
                 int statusBarId = resources
                         .getIdentifier("status_bar_height",
