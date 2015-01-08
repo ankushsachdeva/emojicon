@@ -155,13 +155,29 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 						.getHeight();
 				int heightDifference = screenHeight
 						- (r.bottom - r.top);
-				int resourceId = mContext.getResources()
-						.getIdentifier("status_bar_height",
-								"dimen", "android");
-				if (resourceId > 0) {
-					heightDifference -= mContext.getResources()
-							.getDimensionPixelSize(resourceId);
-				}
+                }
+				Resources resources = mContext.getResources();
+                int statusBarId = resources
+                        .getIdentifier("status_bar_height",
+                                "dimen", "android");
+                if (statusBarId > 0) {
+                    heightDifference -= resources
+                            .getDimensionPixelSize(statusBarId);
+                }
+
+                //Resolved using http://stackoverflow.com/a/16608481/2853322
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    int navBarId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+                    boolean hasMenuKey;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                        hasMenuKey = ViewConfiguration.get(mContext).hasPermanentMenuKey();
+                    } else hasMenuKey = true; //Skip has menu key below ICS
+                    boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+                    if (navBarId > 0 && !hasMenuKey && !hasBackKey) {
+                        heightDifference -= resources.getDimensionPixelSize(navBarId);
+                    }
+                }
+
 				if (heightDifference > 100) {
 					keyBoardHeight = heightDifference;
 					setSize(LayoutParams.MATCH_PARENT, keyBoardHeight);
