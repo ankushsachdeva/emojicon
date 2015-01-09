@@ -6,71 +6,7 @@ Whatsapp like implementation for emjoicons which appear as a popup over the  sof
 
 ## Example
 
-
-```xml
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/root_view"
-              android:orientation="vertical">
-
-    <github.ankushsachdeva.emojicon.EmojiconEditText
-            android:id="@+id/editEmojicon"
-            android:text="I \ue32d emojicon"
-            emojicon:emojiconSize="28sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-</LinearLayout>
-```
-
-```java
-// Give the topmost view of your activity layout hierarchy. This will be used to measure soft keyboard height
-PopupWindow popup = new EmojiconsPopup(rootView, getActivity());
-
-//Will automatically set size according to the soft keyboard size        
-popup.setSizeForSoftKeyboard();
-
-//Set on emojicon click listener
-popup.setOnEmojiconClickedListener(new OnEmojiconClickedListener() {
-            
-            @Override
-            public void onEmojiconClicked(Emojicon emojicon) {
-                emojiconEditText.append(emojicon.getEmoji());
-            }
-        });
-
-//Set on backspace click listener
-popup.setOnEmojiconBackspaceClickedListener(new OnEmojiconBackspaceClickedListener() {
-    
-    @Override
-    public void onEmojiconBackspaceClicked(View v) {
-        KeyEvent event = new KeyEvent(
-                 0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
-                 emojiconEditText.dispatchKeyEvent(event);
-    }
-});
-
-//Set listener for keyboard open/close
-popup.setOnSoftKeyboardOpenCloseListener(new OnSoftKeyboardOpenCloseListener() {
-            
-            @Override
-            public void onKeyboardOpen(int keyBoardHeight) {
-                if(!popup.isShowing()){
-                    popup.showAtBottom();
-                }
-            }
-            
-            @Override
-            public void onKeyboardClose() {
-                if(popup.isShowing())
-                    popup.dismiss();
-            }
-        });
-
-//To show popup manually you can call popup.showAtBottom();
-//To show popup when the soft keyboard is not already visible, use popup.showAtBottomPending()
-```
+UPDATE: An example project has been made.
 
 Note: You can change the size of emojis in XML layout through attribute `emojiconSize`.
 
