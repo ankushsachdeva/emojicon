@@ -64,12 +64,12 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
     }
 
     public void push(Emojicon object) {
-        // FIXME totally inefficient way of adding the emoji to the adapter
-        // TODO this should be probably replaced by a deque
         if (contains(object)) {
-            super.remove(object);
+            // rotate the array list starting from index 0 to index of Emojicon object
+            Collections.rotate(super.subList(0, super.indexOf(object)+1), 1);
+        } else {
+            add(0, object);
         }
-        add(0, object);
     }
 
     @Override
