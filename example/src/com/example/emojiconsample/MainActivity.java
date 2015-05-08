@@ -68,20 +68,20 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onEmojiconClicked(Emojicon emojicon) {
-				if (emojiconEditText == null || emojicon == null) {
-					return;
-				}
+	            if (emojiconEditText == null || emojicon == null) {
+	                return;
+	            }
 
-				int start = emojiconEditText.getSelectionStart();
-				int end = emojiconEditText.getSelectionEnd();
-				if (start < 0) {
-					emojiconEditText.append(emojicon.getEmoji());
-				} else {
-					emojiconEditText.getText().replace(Math.min(start, end),
-						Math.max(start, end), emojicon.getEmoji(), 0,
-						emojicon.getEmoji().length());
-				}
-			}
+	            int start = emojiconEditText.getSelectionStart();
+	            int end = emojiconEditText.getSelectionEnd();
+	            if (start < 0) {
+	                emojiconEditText.append(emojicon.getEmoji());
+	            } else {
+	                emojiconEditText.getText().replace(Math.min(start, end),
+	                        Math.max(start, end), emojicon.getEmoji(), 0,
+	                        emojicon.getEmoji().length());
+	            }
+	        }
 		});
 
 		//On backspace clicked, emulate the KEYCODE_DEL key event
@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onEmojiconBackspaceClicked(View v) {
 				KeyEvent event = new KeyEvent(
-					0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+						0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
 				emojiconEditText.dispatchKeyEvent(event);
 			}
 		});
@@ -129,21 +129,21 @@ public class MainActivity extends Activity {
 		});	
 
 		//On submit, add the edittext text to listview and clear the edittext
-submitButton.setOnClickListener(new OnClickListener() {
+		submitButton.setOnClickListener(new OnClickListener() {
 
-	@Override
-	public void onClick(View v) {
-		String newText = emojiconEditText.getText().toString();
-		emojiconEditText.getText().clear();
-		mAdapter.add(newText);
-		mAdapter.notifyDataSetChanged();
+			@Override
+			public void onClick(View v) {
+				String newText = emojiconEditText.getText().toString();
+				emojiconEditText.getText().clear();
+				mAdapter.add(newText);
+				mAdapter.notifyDataSetChanged();
 
+			}
+		});
 	}
-});
-}
 
-private void changeEmojiKeyboardIcon(ImageView iconToBeChanged, int drawableResourceId){
-	iconToBeChanged.setImageResource(drawableResourceId);
-}
+	private void changeEmojiKeyboardIcon(ImageView iconToBeChanged, int drawableResourceId){
+		iconToBeChanged.setImageResource(drawableResourceId);
+	}
 
 }
