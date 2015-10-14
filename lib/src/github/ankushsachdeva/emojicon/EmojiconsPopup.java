@@ -30,10 +30,12 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,6 +43,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.PopupWindow;
 
@@ -151,8 +154,7 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 				Rect r = new Rect();
 				rootView.getWindowVisibleDisplayFrame(r);
 
-				int screenHeight = rootView.getRootView()
-						.getHeight();
+				int screenHeight = getUsableScreenHeight();
 				int heightDifference = screenHeight
 						- (r.bottom - r.top);
 				int resourceId = mContext.getResources()
@@ -182,6 +184,20 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 				}
 			}
 		});
+	}	
+
+	private int getUsableScreenHeight() {	    
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+	    	DisplayMetrics metrics = new DisplayMetrics();
+	    	
+	    	WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+	        windowManager.getDefaultDisplay().getMetrics(metrics);	 
+	        
+	        return metrics.heightPixels;
+	        
+	    } else {
+	    	return rootView.getRootView().getHeight();
+	    }
 	}
 
 	/**
