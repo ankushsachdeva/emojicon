@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/kinkoi.lo/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/kinkoi.lo/dev/android-samples/emojiklo/example/build/intermediates/pre-dexed/debug/support-v4-19.1.0_cc5fdde479ab3d4932841b037fa4abf9a528c040.jar" />
+    </item>
+    <item
+        jar="/Users/kinkoi.lo/dev/android-samples/emojiklo/example/build/intermediates/exploded-aar/emojiklo/lib/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="206ee906f01b9282182d2d91b4cd19a24f533102">
+        <dex dex="/Users/kinkoi.lo/dev/android-samples/emojiklo/example/build/intermediates/pre-dexed/debug/emojiklo-lib-unspecified_19ce47234c7b16822b0f1e694f91375a00257be7.jar" />
+    </item>
+
+</items>
