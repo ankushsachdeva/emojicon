@@ -1,6 +1,7 @@
 package com.example.emojiconsample;
 
 import github.ankushsachdeva.emojicon.EmojiconEditText;
+import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconGridView.OnEmojiconClickedListener;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.EmojiconsPopup.OnEmojiconBackspaceClickedListener;
@@ -64,36 +65,10 @@ public class MainActivity extends Activity {
 		});
 
 		//On emoji clicked, add it to edittext
-		popup.setOnEmojiconClickedListener(new OnEmojiconClickedListener() {
-
-			@Override
-			public void onEmojiconClicked(Emojicon emojicon) {
-	            if (emojiconEditText == null || emojicon == null) {
-	                return;
-	            }
-
-	            int start = emojiconEditText.getSelectionStart();
-	            int end = emojiconEditText.getSelectionEnd();
-	            if (start < 0) {
-	                emojiconEditText.append(emojicon.getEmoji());
-	            } else {
-	                emojiconEditText.getText().replace(Math.min(start, end),
-	                        Math.max(start, end), emojicon.getEmoji(), 0,
-	                        emojicon.getEmoji().length());
-	            }
-	        }
-		});
+		popup.setOnEmojiconClickedListener(new EmojiconsPopup.OnEmojiconClickedListenerHelper(emojiconEditText));
 
 		//On backspace clicked, emulate the KEYCODE_DEL key event
-		popup.setOnEmojiconBackspaceClickedListener(new OnEmojiconBackspaceClickedListener() {
-
-			@Override
-			public void onEmojiconBackspaceClicked(View v) {
-				KeyEvent event = new KeyEvent(
-						0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
-				emojiconEditText.dispatchKeyEvent(event);
-			}
-		});
+		popup.setOnEmojiconBackspaceClickedListener(new EmojiconsPopup.OnEmojiconBackspaceClickedListenerHelper(emojiconEditText));
 		
 		// To toggle between text keyboard and emoji keyboard keyboard(Popup)
 		emojiButton.setOnClickListener(new OnClickListener() {

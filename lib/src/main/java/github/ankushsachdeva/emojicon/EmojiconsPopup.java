@@ -37,6 +37,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -420,5 +421,45 @@ public class EmojiconsPopup extends PopupWindow implements ViewPager.OnPageChang
 	public interface OnSoftKeyboardOpenCloseListener{
 		void onKeyboardOpen(int keyBoardHeight);
 		void onKeyboardClose();
+	}
+
+	public static class OnEmojiconBackspaceClickedListenerHelper implements OnEmojiconBackspaceClickedListener {
+		private EmojiconEditText mEmojiconEditText;
+
+		public OnEmojiconBackspaceClickedListenerHelper(EmojiconEditText editText) {
+			mEmojiconEditText = editText;
+		}
+
+		@Override
+		public void onEmojiconBackspaceClicked(View v) {
+			KeyEvent event = new KeyEvent(
+					0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+			mEmojiconEditText.dispatchKeyEvent(event);
+		}
+	}
+
+	public static class OnEmojiconClickedListenerHelper implements OnEmojiconClickedListener {
+		private EmojiconEditText mEmojiconEditText;
+
+		public OnEmojiconClickedListenerHelper(EmojiconEditText editText) {
+			mEmojiconEditText = editText;
+		}
+
+		@Override
+		public void onEmojiconClicked(Emojicon emojicon) {
+			if (mEmojiconEditText == null || emojicon == null) {
+				return;
+			}
+
+			int start = mEmojiconEditText.getSelectionStart();
+			int end = mEmojiconEditText.getSelectionEnd();
+			if (start < 0) {
+				mEmojiconEditText.append(emojicon.getEmoji());
+			} else {
+				mEmojiconEditText.getText().replace(Math.min(start, end),
+						Math.max(start, end), emojicon.getEmoji(), 0,
+						emojicon.getEmoji().length());
+			}
+		}
 	}
 }
