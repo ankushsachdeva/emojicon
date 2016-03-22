@@ -35,7 +35,7 @@ dependencies {
 publish {
     groupId = 'com.github.kinkoi'
     artifactId = 'emojicon-release'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = 'Adding emojicon support to Android keyboard'
     website = 'https://github.com/kinkoi/emojicon'
 }
