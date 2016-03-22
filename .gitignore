@@ -32,3 +32,4 @@ proguard/
 .gradle
 .DS_Store
 
+build/
