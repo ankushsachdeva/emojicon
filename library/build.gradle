@@ -1,0 +1,27 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        applicationId "github.ankushsachdeva.emojicon"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 1
+        versionName "V1"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:24.0.2'
+}
